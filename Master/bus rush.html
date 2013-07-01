@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title> AutoBoos </title>
+</head>
+<body onLoad="startGame()"> 
+<canvas id="Amir" height=450 width=450 style="border: 1px dashed #000000"></canvas>
+<script type= "text/javascript">
+			var theCanvas = document.getElementById("Amir");
+			document.addEventListener('keydown',keydown);
+			var theContext = theCanvas.getContext ("2d");	
+			var x = 50;
+			var y = 50;
+			var scaleX= 42;
+			var scaleY= 42;
+			var FPS= 1000/2 ;
+			
+			var myImage= new Image ();
+			myImage.src = "buss.jpg";
+			
+			var myAudio= new Audio ();
+			myAudio.src = "gameover.wav";
+			
+			var gameover = new Image ();
+			gameover.src = "game over.png";
+			
+			var anotherImage= new Image ();
+			anotherImage.src= "side bus.png";
+			//give some info on what you're doing
+			
+			var passengers= new Image ();
+			passengers.src= "passengers.png";
+			
+			
+			var size = 20;
+			var pickups = new Array();
+			pickups.push([20,35]);
+			
+			var loop = setInterval (function(){
+			//clearect(startX, startY, Xsize, Ysize)
+				
+				theContext.clearRect(0,0,450,450);
+				//drawImage(imageVariable,Xcoord,Ycoord, Xscale, Yscale)
+				theContext.drawImage(myImage,0,0, scaleX, scaleY);
+				theContext.drawImage(anotherImage,x,y,20,20);
+				
+				//draw random images
+				for(var  i = 0; i < pickups.length; i++){
+					//theContext.drawImage(pickup, pickups[i][0], pickups[i][1]);
+					theContext.drawImage(passengers,pickups[i][0], pickups[i][1], size, size);
+				}				
+					
+				scaleX = 450;
+				scaleY = 450;
+				
+				//xml version="1.0" standalone="no" 
+
+
+				
+				//scaleX++;
+				//scaleY++;
+				
+				//check for collision vs random images
+				var w = 30;
+				var h = 20;
+				for(var  i = 0; i < pickups.length; i++){
+					var px = pickups[i][0];
+					var py = pickups[i][1];
+					if(x < px + size && x + w > px && y < py + size && y + h > py){
+						//hit the object
+						pickups.splice(i,1);
+					}
+				}
+				
+				if(x < 0 || y < 0 || y + h > theCanvas.height || x + w > theCanvas.width){
+					//game  over
+					clearInterval(loop);
+					theContext.drawImage(gameover,0,0,450,450);
+					myAudio.play();
+					alert("Game Over!");
+					}
+				
+				
+				//Increament based onn which if the global key values is true	
+				if (leftKey == true) x -= speed;
+				if (rightKey == true) x += speed;
+				if (upKey == true) y -= speed;
+				if (downKey == true) y += speed;
+				
+				//new random image
+				if(pickups.length < 1){
+					var newx = Math.floor(Math.random()*(theCanvas.width - size));
+					var newy = Math.floor(Math.random()*(theCanvas.height - size));
+					pickups.push([newx,newy]);
+					//alert(newx+","+newy+","+pickups[0]+":"+pickups[0][0]+","+pickups[0][1]);
+				}
+			},1000/8);
+				
+			var speed = 10;
+			//global key values
+			var leftKey= false;
+			var upKey = false;
+			var rightKey = false;
+			var downKey = false;
+			
+			//change the key values based on the buttons pressed!
+			function keydown(e){
+				switch(e.keyCode){
+					case 37:
+						//left
+						//x -= speed;
+						//x-- ;
+						leftKey= true;
+						upKey = false;
+						rightKey = false;
+						downKey = false;
+						break;
+					case 38:
+						//up
+						//y -= speed;
+						//y--;'						
+						leftKey= false;
+						upKey = true;
+						rightKey = false;
+						downKey = false;
+						break;
+					case 39:
+						//right
+						//x += speed;
+						//x++;
+						leftKey= false;
+						upKey = false;
+						rightKey = true;
+						downKey = false;
+						break;
+					case 40:
+						//y += speed;
+						//y++;
+						leftKey= false;
+						upKey = false;
+						rightKey = false;
+						downKey = true;
+						break;
+				}
+				
+				
+			}
+			
+	
+			/* dfdgg
+			*/
+			myImage.onload=function(){
+			theContext.drawImage(myImage,450,450,scaleX,scaleY);
+			}
+		</script>
+		<!--
+		<audio controls>
+		<source src="horse.ogg" type="audio/ogg">
+		<source src="horse.mp3" type="audio/mpeg">
+		Your browser does not support the audio element.
+		</audio>
+		-->
+				
+		</body>
+	
+</html>
