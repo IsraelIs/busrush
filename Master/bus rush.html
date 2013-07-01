@@ -4,17 +4,19 @@
 <title> AutoBoos </title>
 </head>
 <body onLoad="startGame()"> 
-<canvas id="Amir" height=450 width=450 style="border: 1px dashed #000000"></canvas>
+<canvas id="Amir" height=500 width=600 style="border: 1px dashed #000000"></canvas>
 <script type= "text/javascript">
 			var theCanvas = document.getElementById("Amir");
 			document.addEventListener('keydown',keydown);
 			var theContext = theCanvas.getContext ("2d");	
 			var x = 50;
-			var y = 50;
+			var y = 100;
 			var scaleX= 42;
 			var scaleY= 42;
 			var FPS= 1000/2 ;
-			
+			var countingdown
+			var score=0
+			var timer=0
 			var myImage= new Image ();
 			myImage.src = "buss.jpg";
 			
@@ -38,8 +40,11 @@
 			
 			var loop = setInterval (function(){
 			//clearect(startX, startY, Xsize, Ysize)
+			if(countingdown){
+			timer++;
+			}
 				
-				theContext.clearRect(0,0,450,450);
+				theContext.clearRect(0,0,theCanvas.width,theCanvas.height);
 				//drawImage(imageVariable,Xcoord,Ycoord, Xscale, Yscale)
 				theContext.drawImage(myImage,0,0, scaleX, scaleY);
 				theContext.drawImage(anotherImage,x,y,20,20);
@@ -50,8 +55,8 @@
 					theContext.drawImage(passengers,pickups[i][0], pickups[i][1], size, size);
 				}				
 					
-				scaleX = 450;
-				scaleY = 450;
+				scaleX = 500;
+				scaleY = 500;
 				
 				//xml version="1.0" standalone="no" 
 
@@ -69,13 +74,15 @@
 					if(x < px + size && x + w > px && y < py + size && y + h > py){
 						//hit the object
 						pickups.splice(i,1);
+						score+=10;
 					}
 				}
 				
-				if(x < 0 || y < 0 || y + h > theCanvas.height || x + w > theCanvas.width){
+				
+				if(x < 0 || y < 0 || y + h > theCanvas.height || x + w > theCanvas.width-100){
 					//game  over
 					clearInterval(loop);
-					theContext.drawImage(gameover,0,0,450,450);
+					theContext.drawImage(gameover,0,0,500,500);
 					myAudio.play();
 					alert("Game Over!");
 					}
@@ -89,11 +96,13 @@
 				
 				//new random image
 				if(pickups.length < 1){
-					var newx = Math.floor(Math.random()*(theCanvas.width - size));
+					var newx = Math.floor(Math.random()*(500 - size));
 					var newy = Math.floor(Math.random()*(theCanvas.height - size));
 					pickups.push([newx,newy]);
 					//alert(newx+","+newy+","+pickups[0]+":"+pickups[0][0]+","+pickups[0][1]);
 				}
+				theContext.font="bold 36px Arial";
+				theContext.fillText(score,500,490);
 			},1000/8);
 				
 			var speed = 10;
@@ -105,6 +114,7 @@
 			
 			//change the key values based on the buttons pressed!
 			function keydown(e){
+			coountingdown=true;
 				switch(e.keyCode){
 					case 37:
 						//left
@@ -150,7 +160,7 @@
 			/* dfdgg
 			*/
 			myImage.onload=function(){
-			theContext.drawImage(myImage,450,450,scaleX,scaleY);
+			theContext.drawImage(myImage,100,100,scaleX,scaleY);
 			}
 		</script>
 		<!--
@@ -162,5 +172,4 @@
 		-->
 				
 		</body>
-	
-</html>
+		</html>
